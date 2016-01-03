@@ -36,6 +36,7 @@ gulp.task('babel', function() {
 });
 
 gulp.task('server', function() {
+  gulp.run('babel');
   gulp.run('lr-server');
 
   var babelFiles = ['app/es6/**/*.js'];

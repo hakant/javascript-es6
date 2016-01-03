@@ -1,5 +1,310 @@
 "use strict";
 
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+describe("the class keyword", function () {
+
+  it("can create a class", function () {
+    var Employee = (function () {
+      function Employee() {
+        _classCallCheck(this, Employee);
+      }
+
+      _createClass(Employee, [{
+        key: "doWork",
+        value: function doWork() {
+          return "complete!";
+        }
+      }, {
+        key: "getName",
+        value: function getName() {
+          return "Hakan";
+        }
+      }]);
+
+      return Employee;
+    })();
+
+    var e = new Employee();
+
+    expect(e.doWork()).toBe("complete!");
+    expect(e.getName()).toBe("Hakan");
+    expect(Employee.prototype.doWork.call(e)).toBe("complete!");
+  });
+
+  it("can have a constructor", function () {
+    var Employee = (function () {
+      function Employee(name) {
+        _classCallCheck(this, Employee);
+
+        this._name = name;
+      }
+
+      _createClass(Employee, [{
+        key: "doWork",
+        value: function doWork() {
+          return "complete!";
+        }
+      }, {
+        key: "getName",
+        value: function getName() {
+          return this._name;
+        }
+      }]);
+
+      return Employee;
+    })();
+
+    var e1 = new Employee("Hakan");
+    var e2 = new Employee("Alex");
+
+    expect(e1.getName()).toBe("Hakan");
+    expect(e2.getName()).toBe("Alex");
+  });
+
+  it("can have getters and setters", function () {
+    var Employee = (function () {
+      function Employee(name) {
+        _classCallCheck(this, Employee);
+
+        this.name = name;
+      }
+
+      _createClass(Employee, [{
+        key: "doWork",
+        value: function doWork() {
+          return "complete!";
+        }
+      }, {
+        key: "name",
+        get: function get() {
+          return this._name.toUpperCase();
+        },
+        set: function set(newValue) {
+          if (newValue) {
+            this._name = newValue;
+          }
+        }
+      }]);
+
+      return Employee;
+    })();
+
+    var e1 = new Employee("Hakan");
+    var e2 = new Employee("Alex");
+
+    expect(e1.name).toBe("HAKAN");
+    expect(e2.name).toBe("ALEX");
+
+    e1.name = "Chris";
+    expect(e1.name).toBe("CHRIS");
+
+    e1.name = null;
+    expect(e1.name).toBe("CHRIS");
+  });
+
+  it("can have a super class", function () {
+    var Person = (function () {
+      function Person(name) {
+        _classCallCheck(this, Person);
+
+        this.name = name;
+      }
+
+      _createClass(Person, [{
+        key: "name",
+        get: function get() {
+          return this._name;
+        },
+        set: function set(newValue) {
+          if (newValue) {
+            this._name = newValue;
+          }
+        }
+      }]);
+
+      return Person;
+    })();
+
+    var Employee = (function (_Person) {
+      _inherits(Employee, _Person);
+
+      function Employee() {
+        _classCallCheck(this, Employee);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(Employee).apply(this, arguments));
+      }
+
+      _createClass(Employee, [{
+        key: "doWork",
+        value: function doWork() {
+          return this.name + " is working";
+        }
+      }]);
+
+      return Employee;
+    })(Person);
+
+    var p1 = new Person("Hakan");
+    var e1 = new Employee("Christopher");
+
+    expect(p1.name).toBe("Hakan");
+    expect(e1.name).toBe("Christopher");
+
+    expect(e1.doWork()).toBe("Christopher is working");
+  });
+
+  it("can invoke super methods", function () {
+    var Person = (function () {
+      function Person(name) {
+        _classCallCheck(this, Person);
+
+        this.name = name;
+      }
+
+      _createClass(Person, [{
+        key: "name",
+        get: function get() {
+          return this._name;
+        },
+        set: function set(newValue) {
+          if (newValue) {
+            this._name = newValue;
+          }
+        }
+      }]);
+
+      return Person;
+    })();
+
+    var Employee = (function (_Person2) {
+      _inherits(Employee, _Person2);
+
+      function Employee(title, name) {
+        _classCallCheck(this, Employee);
+
+        var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(Employee).call(this, name));
+
+        _this2._title = title;
+        return _this2;
+      }
+
+      _createClass(Employee, [{
+        key: "doWork",
+        value: function doWork() {
+          return this.name + " is working";
+        }
+      }, {
+        key: "title",
+        get: function get() {
+          return this._title;
+        }
+      }]);
+
+      return Employee;
+    })(Person);
+
+    var e1 = new Employee("Developer", "Hakan");
+
+    expect(e1.name).toBe("Hakan");
+    expect(e1.title).toBe("Developer");
+  });
+
+  it("can override methods", function () {
+    var Person = (function () {
+      function Person(name) {
+        _classCallCheck(this, Person);
+
+        this.name = name;
+      }
+
+      _createClass(Person, [{
+        key: "doWork",
+        value: function doWork() {
+          return "free";
+        }
+      }, {
+        key: "toString",
+        value: function toString() {
+          return this.name;
+        }
+      }, {
+        key: "name",
+        get: function get() {
+          return this._name;
+        },
+        set: function set(newValue) {
+          if (newValue) {
+            this._name = newValue;
+          }
+        }
+      }]);
+
+      return Person;
+    })();
+
+    var Employee = (function (_Person3) {
+      _inherits(Employee, _Person3);
+
+      function Employee(title, name) {
+        _classCallCheck(this, Employee);
+
+        var _this3 = _possibleConstructorReturn(this, Object.getPrototypeOf(Employee).call(this, name));
+
+        _this3._title = title;
+        return _this3;
+      }
+
+      _createClass(Employee, [{
+        key: "doWork",
+        value: function doWork() {
+          return "paid";
+        }
+      }, {
+        key: "title",
+        get: function get() {
+          return this._title;
+        }
+      }]);
+
+      return Employee;
+    })(Person);
+
+    var p1 = new Person("Alex");
+    var e1 = new Employee("Developer", "Hakan");
+
+    expect(p1.doWork()).toBe("free");
+    expect(e1.doWork()).toBe("paid");
+    expect(p1.toString()).toBe("Alex");
+    expect(e1.toString()).toBe("Hakan");
+
+    var makeEveryoneWork = function makeEveryoneWork() {
+      var results = [];
+
+      for (var _len = arguments.length, people = Array(_len), _key = 0; _key < _len; _key++) {
+        people[_key] = arguments[_key];
+      }
+
+      for (var i = 0; i < people.length; i++) {
+        if (people[i] instanceof Person) {
+          results.push(people[i].doWork());
+        }
+      }
+
+      return results;
+    };
+
+    expect(makeEveryoneWork(p1, e1, {})).toEqual(["free", "paid"]);
+  });
+});
+"use strict";
+
 describe("using const", function () {
   "use strict";
 
