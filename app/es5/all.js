@@ -1,22 +1,161 @@
 "use strict";
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _from = require("babel-runtime/core-js/array/from");
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+var _from2 = _interopRequireDefault(_from);
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+var _of = require("babel-runtime/core-js/array/of");
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _of2 = _interopRequireDefault(_of);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+describe("Arrays", function () {
+
+   it("should return the first matching element using find", function () {
+      var arr = [1, 5, 10];
+      var match = arr.find(function (x) {
+         return x > 8;
+      });
+
+      expect(match).toBe(10);
+   });
+
+   it("should return the first matching index using findIndex", function () {
+      var match = [1, 5, 10].findIndex(function (i) {
+         return i > 3;
+      });
+      expect(match).toBe(1);
+   });
+
+   it("should fill in the entire array when fill is called", function () {
+      var arr = [1, 2, 3, 4, 5];
+      arr.fill('a'); // every element in this array is now 'a'
+      expect(arr[3]).toBe('a');
+   });
+
+   it("should fill in some of the array when fill is called with args", function () {
+      var arr = [1, 2, 3, 4, 5];
+      arr.fill('a', 2, 3); // every element in this array is now 'a'
+      expect(arr[2]).toBe('a');
+      expect(arr[1]).toBe(2);
+      expect(arr[3]).toBe(4);
+   });
+
+   it("should create a new array with 1 arg when given 1 arg when of is called", function () {
+      var arr = new Array(3);
+      var ofArr = (0, _of2.default)(3);
+      expect(arr.length).toBe(3);
+      expect(ofArr.length).toBe(1);
+   });
+
+   it("should create a new array from an array-like object when from is called", function () {
+      // arrayLike is not a true array
+      var arrayLike = document.querySelectorAll('div');
+      expect(arrayLike.forEach).toBe(undefined);
+
+      var fromArray = (0, _from2.default)(arrayLike);
+      expect(fromArray.forEach).toBeDefined();
+   });
+
+   it("should return entries from the entries function", function () {
+      var a = ['Joe', 'Jim', 'John'];
+      var entries = a.entries();
+
+      var firstEntry = entries.next().value;
+      expect(firstEntry[0]).toBe(0);
+      expect(firstEntry[1]).toBe("Joe");
+   });
+
+   it("should enumerate keys with the keys function", function () {
+      var a = ['Joe', 'Jim', 'John'];
+      var keys = a.keys();
+
+      var firstKey = keys.next().value;
+      expect(firstKey).toBe(0);
+   });
+});
+"use strict";
+
+describe("arrow functions", function () {
+
+  it("provide a compact syntax to define a function", function () {
+
+    var add = function add(x, y) {
+      return x + y;
+    };
+    var square = function square(x) {
+      return x * x;
+    };
+    var three = function three() {
+      return 3;
+    };
+
+    expect(add(2, 3)).toBe(5);
+    expect(square(2)).toBe(4);
+    expect(three()).toBe(3);
+  });
+
+  it("can be used with array methods", function () {
+
+    var numbers = [1, 2, 3, 4];
+    var sum = 0;
+
+    numbers.forEach(function (n) {
+      return sum += n;
+    });
+    expect(sum).toBe(10);
+
+    var doubled = numbers.map(function (n) {
+      return 2 * n;
+    });
+    expect(doubled).toEqual([2, 4, 6, 8]);
+  });
+
+  it("lexically binds to this", function (done) {
+    var _this = this;
+
+    this.name = "Hakan";
+
+    setTimeout(function () {
+      expect(_this.name).toBe("Hakan");
+      done();
+    }, 15);
+  });
+});
+"use strict";
+
+var _getPrototypeOf = require("babel-runtime/core-js/object/get-prototype-of");
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _possibleConstructorReturn2 = require("babel-runtime/helpers/possibleConstructorReturn");
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require("babel-runtime/helpers/inherits");
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require("babel-runtime/helpers/createClass");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 describe("the class keyword", function () {
 
   it("can create a class", function () {
     var Employee = (function () {
       function Employee() {
-        _classCallCheck(this, Employee);
+        (0, _classCallCheck3.default)(this, Employee);
       }
 
-      _createClass(Employee, [{
+      (0, _createClass3.default)(Employee, [{
         key: "doWork",
         value: function doWork() {
           return "complete!";
@@ -27,7 +166,6 @@ describe("the class keyword", function () {
           return "Hakan";
         }
       }]);
-
       return Employee;
     })();
 
@@ -41,12 +179,12 @@ describe("the class keyword", function () {
   it("can have a constructor", function () {
     var Employee = (function () {
       function Employee(name) {
-        _classCallCheck(this, Employee);
+        (0, _classCallCheck3.default)(this, Employee);
 
         this._name = name;
       }
 
-      _createClass(Employee, [{
+      (0, _createClass3.default)(Employee, [{
         key: "doWork",
         value: function doWork() {
           return "complete!";
@@ -57,7 +195,6 @@ describe("the class keyword", function () {
           return this._name;
         }
       }]);
-
       return Employee;
     })();
 
@@ -71,12 +208,12 @@ describe("the class keyword", function () {
   it("can have getters and setters", function () {
     var Employee = (function () {
       function Employee(name) {
-        _classCallCheck(this, Employee);
+        (0, _classCallCheck3.default)(this, Employee);
 
         this.name = name;
       }
 
-      _createClass(Employee, [{
+      (0, _createClass3.default)(Employee, [{
         key: "doWork",
         value: function doWork() {
           return "complete!";
@@ -92,7 +229,6 @@ describe("the class keyword", function () {
           }
         }
       }]);
-
       return Employee;
     })();
 
@@ -112,12 +248,12 @@ describe("the class keyword", function () {
   it("can have a super class", function () {
     var Person = (function () {
       function Person(name) {
-        _classCallCheck(this, Person);
+        (0, _classCallCheck3.default)(this, Person);
 
         this.name = name;
       }
 
-      _createClass(Person, [{
+      (0, _createClass3.default)(Person, [{
         key: "name",
         get: function get() {
           return this._name;
@@ -128,26 +264,23 @@ describe("the class keyword", function () {
           }
         }
       }]);
-
       return Person;
     })();
 
     var Employee = (function (_Person) {
-      _inherits(Employee, _Person);
+      (0, _inherits3.default)(Employee, _Person);
 
       function Employee() {
-        _classCallCheck(this, Employee);
-
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Employee).apply(this, arguments));
+        (0, _classCallCheck3.default)(this, Employee);
+        return (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Employee).apply(this, arguments));
       }
 
-      _createClass(Employee, [{
+      (0, _createClass3.default)(Employee, [{
         key: "doWork",
         value: function doWork() {
           return this.name + " is working";
         }
       }]);
-
       return Employee;
     })(Person);
 
@@ -163,12 +296,12 @@ describe("the class keyword", function () {
   it("can invoke super methods", function () {
     var Person = (function () {
       function Person(name) {
-        _classCallCheck(this, Person);
+        (0, _classCallCheck3.default)(this, Person);
 
         this.name = name;
       }
 
-      _createClass(Person, [{
+      (0, _createClass3.default)(Person, [{
         key: "name",
         get: function get() {
           return this._name;
@@ -179,23 +312,22 @@ describe("the class keyword", function () {
           }
         }
       }]);
-
       return Person;
     })();
 
     var Employee = (function (_Person2) {
-      _inherits(Employee, _Person2);
+      (0, _inherits3.default)(Employee, _Person2);
 
       function Employee(title, name) {
-        _classCallCheck(this, Employee);
+        (0, _classCallCheck3.default)(this, Employee);
 
-        var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(Employee).call(this, name));
+        var _this2 = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Employee).call(this, name));
 
         _this2._title = title;
         return _this2;
       }
 
-      _createClass(Employee, [{
+      (0, _createClass3.default)(Employee, [{
         key: "doWork",
         value: function doWork() {
           return this.name + " is working";
@@ -206,7 +338,6 @@ describe("the class keyword", function () {
           return this._title;
         }
       }]);
-
       return Employee;
     })(Person);
 
@@ -219,12 +350,12 @@ describe("the class keyword", function () {
   it("can override methods", function () {
     var Person = (function () {
       function Person(name) {
-        _classCallCheck(this, Person);
+        (0, _classCallCheck3.default)(this, Person);
 
         this.name = name;
       }
 
-      _createClass(Person, [{
+      (0, _createClass3.default)(Person, [{
         key: "doWork",
         value: function doWork() {
           return "free";
@@ -245,23 +376,22 @@ describe("the class keyword", function () {
           }
         }
       }]);
-
       return Person;
     })();
 
     var Employee = (function (_Person3) {
-      _inherits(Employee, _Person3);
+      (0, _inherits3.default)(Employee, _Person3);
 
       function Employee(title, name) {
-        _classCallCheck(this, Employee);
+        (0, _classCallCheck3.default)(this, Employee);
 
-        var _this3 = _possibleConstructorReturn(this, Object.getPrototypeOf(Employee).call(this, name));
+        var _this3 = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Employee).call(this, name));
 
         _this3._title = title;
         return _this3;
       }
 
-      _createClass(Employee, [{
+      (0, _createClass3.default)(Employee, [{
         key: "doWork",
         value: function doWork() {
           return "paid";
@@ -272,7 +402,6 @@ describe("the class keyword", function () {
           return this._title;
         }
       }]);
-
       return Employee;
     })(Person);
 
@@ -333,7 +462,11 @@ describe("using const", function () {
 });
 "use strict";
 
-var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; })();
+var _slicedToArray2 = require("babel-runtime/helpers/slicedToArray");
+
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 describe("default parameters", function () {
 
@@ -361,7 +494,7 @@ describe("default parameters", function () {
 
     var _doWork = doWork(5, undefined);
 
-    var _doWork2 = _slicedToArray(_doWork, 3);
+    var _doWork2 = (0, _slicedToArray3.default)(_doWork, 3);
 
     var a = _doWork2[0];
     var b = _doWork2[1];
@@ -392,7 +525,11 @@ describe("default parameters", function () {
 });
 "use strict";
 
-var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; })();
+var _slicedToArray2 = require("babel-runtime/helpers/slicedToArray");
+
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 describe("destructuring", function () {
   "use strict";
@@ -426,7 +563,7 @@ describe("destructuring", function () {
 
     var _doWork = doWork();
 
-    var _doWork2 = _slicedToArray(_doWork, 4);
+    var _doWork2 = (0, _slicedToArray3.default)(_doWork, 4);
 
     var x = _doWork2[1];
     var y = _doWork2[2];
@@ -479,6 +616,851 @@ describe("destructuring", function () {
 });
 "use strict";
 
+var _getIterator2 = require("babel-runtime/core-js/get-iterator");
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _regenerator = require("babel-runtime/regenerator");
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+describe("generators", function () {
+
+  it("can build an iterable", function () {
+
+    var numbers = _regenerator2.default.mark(function numbers(start, end) {
+      var i;
+      return _regenerator2.default.wrap(function numbers$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              i = start;
+
+            case 1:
+              if (!(i <= end)) {
+                _context.next = 8;
+                break;
+              }
+
+              console.log(i);
+              _context.next = 5;
+              return i;
+
+            case 5:
+              i++;
+              _context.next = 1;
+              break;
+
+            case 8:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, numbers, this);
+    });
+
+    var sum = 0;
+    var iterator = numbers(1, 5);
+    console.log("next");
+    var next = iterator.next();
+    while (!next.done) {
+      sum += next.value;
+      console.log("next");
+      next = iterator.next();
+    }
+
+    expect(sum).toBe(15);
+  });
+
+  it("can build an iterable - for of", function () {
+
+    var numbers = _regenerator2.default.mark(function numbers(start, end) {
+      var i;
+      return _regenerator2.default.wrap(function numbers$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              i = start;
+
+            case 1:
+              if (!(i <= end)) {
+                _context2.next = 8;
+                break;
+              }
+
+              console.log(i);
+              _context2.next = 5;
+              return i;
+
+            case 5:
+              i++;
+              _context2.next = 1;
+              break;
+
+            case 8:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, numbers, this);
+    });
+
+    var sum = 0;
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = (0, _getIterator3.default)(numbers(1, 5)), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var n = _step.value;
+
+        sum += n;
+        console.log("next");
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+
+    var iterator = numbers(1, 5);
+    console.log("next");
+
+    expect(sum).toBe(15);
+  });
+
+  it("can take a parameter from next(param)", function () {
+
+    var range = _regenerator2.default.mark(function range(start, end) {
+      var current, delta;
+      return _regenerator2.default.wrap(function range$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              current = start;
+
+            case 1:
+              if (!(current <= end)) {
+                _context3.next = 8;
+                break;
+              }
+
+              _context3.next = 4;
+              return current;
+
+            case 4:
+              delta = _context3.sent;
+
+              current += delta || 1;
+              _context3.next = 1;
+              break;
+
+            case 8:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, range, this);
+    });
+
+    var result = [];
+    var iterator = range(1, 10);
+    var next = iterator.next();
+    while (!next.done) {
+      result.push(next.value);
+      next = iterator.next(2);
+    }
+
+    expect(result).toEqual([1, 3, 5, 7, 9]);
+  });
+
+  it("can take a parameter from next(param) - building it manually", function () {
+
+    var range = _regenerator2.default.mark(function range(start, end) {
+      var current, _delta;
+
+      return _regenerator2.default.wrap(function range$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              current = start;
+
+            case 1:
+              if (!(current <= end)) {
+                _context4.next = 8;
+                break;
+              }
+
+              _context4.next = 4;
+              return current;
+
+            case 4:
+              _delta = _context4.sent;
+
+              current += _delta || 1;
+              _context4.next = 1;
+              break;
+
+            case 8:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, range, this);
+    });
+
+    var range2 = function range2(start, end) {
+      var current = start;
+      var first = true;
+      return {
+        next: function next() {
+          var delta = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+
+          var result = {
+            value: undefined,
+            done: true
+          };
+          if (!first) {
+            current += delta;
+          }
+          if (current <= end) {
+            result.value = current;
+            result.done = false;
+          }
+          first = false;
+          return result;
+        }
+      };
+    };
+
+    var result = [];
+    var iterator = range2(1, 10);
+    var next = iterator.next();
+    while (!next.done) {
+      result.push(next.value);
+      next = iterator.next(2);
+    }
+
+    expect(result).toEqual([1, 3, 5, 7, 9]);
+  });
+});
+"use strict";
+
+var _regenerator = require("babel-runtime/regenerator");
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _iterator9 = require("babel-runtime/core-js/symbol/iterator");
+
+var _iterator10 = _interopRequireDefault(_iterator9);
+
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require("babel-runtime/helpers/createClass");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _getIterator2 = require("babel-runtime/core-js/get-iterator");
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+describe("iterables", function () {
+
+  it("can work with iterators at a low level", function () {
+
+    var sum = 0;
+    var numbers = [1, 2, 3, 4];
+
+    // for loop
+    sum = 0;
+    for (var i = 0; i < numbers.length; i++) {
+      sum += numbers[i];
+    }
+    expect(sum).toBe(10);
+
+    // for in
+    sum = 0;
+    for (var i in numbers) {
+      sum += numbers[i];
+    }
+    expect(sum).toBe(10);
+
+    // iterator
+    sum = 0;
+    var iterator = numbers.values();
+    var next = iterator.next();
+    while (!next.done) {
+      sum += next.value;
+      next = iterator.next();
+    }
+    expect(sum).toBe(10);
+  });
+});
+
+describe("for of", function () {
+
+  it("can work with iterables at a higher level", function () {
+    var sum = 0;
+    var numbers = [1, 2, 3, 4];
+
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = (0, _getIterator3.default)(numbers), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var i = _step.value;
+
+        sum += i;
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+
+    expect(sum).toBe(10);
+  });
+});
+
+describe("iterable", function () {
+
+  it("can be built by implementing Symbol.iterator manually without a generator", function () {
+    var Company = (function () {
+      function Company() {
+        (0, _classCallCheck3.default)(this, Company);
+
+        this.employees = [];
+      }
+
+      (0, _createClass3.default)(Company, [{
+        key: "addEmployees",
+        value: function addEmployees() {
+          for (var _len = arguments.length, names = Array(_len), _key = 0; _key < _len; _key++) {
+            names[_key] = arguments[_key];
+          }
+
+          this.employees = this.employees.concat(names);
+        }
+      }, {
+        key: _iterator10.default,
+        value: function value() {
+          return new ArrayIterator(this.employees);
+        }
+      }]);
+      return Company;
+    })();
+
+    var ArrayIterator = (function () {
+      function ArrayIterator(array) {
+        (0, _classCallCheck3.default)(this, ArrayIterator);
+
+        this.array = array;
+        this.index = 0;
+      }
+
+      (0, _createClass3.default)(ArrayIterator, [{
+        key: "next",
+        value: function next() {
+          var result = {
+            value: undefined,
+            done: true
+          };
+
+          if (this.index < this.array.length) {
+            result.value = this.array[this.index];
+            result.done = false;
+            this.index++;
+          }
+
+          return result;
+        }
+      }]);
+      return ArrayIterator;
+    })();
+
+    var count = 0;
+    var company = new Company();
+    company.addEmployees("Tim", "Sue", "Joy", "Tom");
+
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
+
+    try {
+      for (var _iterator2 = (0, _getIterator3.default)(company), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        var employee = _step2.value;
+
+        count += 1;
+      }
+    } catch (err) {
+      _didIteratorError2 = true;
+      _iteratorError2 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+          _iterator2.return();
+        }
+      } finally {
+        if (_didIteratorError2) {
+          throw _iteratorError2;
+        }
+      }
+    }
+
+    expect(count).toBe(4);
+  });
+
+  it("can be built by implementing Symbol.iterator", function () {
+    var Company = (function () {
+      function Company() {
+        (0, _classCallCheck3.default)(this, Company);
+
+        this.employees = [];
+      }
+
+      (0, _createClass3.default)(Company, [{
+        key: "addEmployees",
+        value: function addEmployees() {
+          for (var _len2 = arguments.length, names = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+            names[_key2] = arguments[_key2];
+          }
+
+          this.employees = this.employees.concat(names);
+        }
+      }, {
+        key: _iterator10.default,
+        value: _regenerator2.default.mark(function value() {
+          var _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, e;
+
+          return _regenerator2.default.wrap(function value$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  _iteratorNormalCompletion3 = true;
+                  _didIteratorError3 = false;
+                  _iteratorError3 = undefined;
+                  _context.prev = 3;
+                  _iterator3 = (0, _getIterator3.default)(this.employees);
+
+                case 5:
+                  if (_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done) {
+                    _context.next = 13;
+                    break;
+                  }
+
+                  e = _step3.value;
+
+                  console.log(e);
+                  _context.next = 10;
+                  return e;
+
+                case 10:
+                  _iteratorNormalCompletion3 = true;
+                  _context.next = 5;
+                  break;
+
+                case 13:
+                  _context.next = 19;
+                  break;
+
+                case 15:
+                  _context.prev = 15;
+                  _context.t0 = _context["catch"](3);
+                  _didIteratorError3 = true;
+                  _iteratorError3 = _context.t0;
+
+                case 19:
+                  _context.prev = 19;
+                  _context.prev = 20;
+
+                  if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                    _iterator3.return();
+                  }
+
+                case 22:
+                  _context.prev = 22;
+
+                  if (!_didIteratorError3) {
+                    _context.next = 25;
+                    break;
+                  }
+
+                  throw _iteratorError3;
+
+                case 25:
+                  return _context.finish(22);
+
+                case 26:
+                  return _context.finish(19);
+
+                case 27:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, value, this, [[3, 15, 19, 27], [20,, 22, 26]]);
+        })
+      }]);
+      return Company;
+    })();
+
+    var count = 0;
+    var company = new Company();
+    company.addEmployees("Tim", "Sue", "Joy", "Tom");
+
+    var _iteratorNormalCompletion4 = true;
+    var _didIteratorError4 = false;
+    var _iteratorError4 = undefined;
+
+    try {
+      for (var _iterator4 = (0, _getIterator3.default)(company), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+        var employee = _step4.value;
+
+        count += 1;
+      }
+    } catch (err) {
+      _didIteratorError4 = true;
+      _iteratorError4 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion4 && _iterator4.return) {
+          _iterator4.return();
+        }
+      } finally {
+        if (_didIteratorError4) {
+          throw _iteratorError4;
+        }
+      }
+    }
+
+    expect(count).toBe(4);
+  });
+
+  it("can be used in functional compositions", function () {
+    var Company = (function () {
+      function Company() {
+        (0, _classCallCheck3.default)(this, Company);
+
+        this.employees = [];
+      }
+
+      (0, _createClass3.default)(Company, [{
+        key: "addEmployees",
+        value: function addEmployees() {
+          for (var _len3 = arguments.length, names = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+            names[_key3] = arguments[_key3];
+          }
+
+          this.employees = this.employees.concat(names);
+        }
+      }, {
+        key: _iterator10.default,
+        value: _regenerator2.default.mark(function value() {
+          var _iteratorNormalCompletion5, _didIteratorError5, _iteratorError5, _iterator5, _step5, _e;
+
+          return _regenerator2.default.wrap(function value$(_context2) {
+            while (1) {
+              switch (_context2.prev = _context2.next) {
+                case 0:
+                  _iteratorNormalCompletion5 = true;
+                  _didIteratorError5 = false;
+                  _iteratorError5 = undefined;
+                  _context2.prev = 3;
+                  _iterator5 = (0, _getIterator3.default)(this.employees);
+
+                case 5:
+                  if (_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done) {
+                    _context2.next = 13;
+                    break;
+                  }
+
+                  _e = _step5.value;
+
+                  console.log(_e);
+                  _context2.next = 10;
+                  return _e;
+
+                case 10:
+                  _iteratorNormalCompletion5 = true;
+                  _context2.next = 5;
+                  break;
+
+                case 13:
+                  _context2.next = 19;
+                  break;
+
+                case 15:
+                  _context2.prev = 15;
+                  _context2.t0 = _context2["catch"](3);
+                  _didIteratorError5 = true;
+                  _iteratorError5 = _context2.t0;
+
+                case 19:
+                  _context2.prev = 19;
+                  _context2.prev = 20;
+
+                  if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                    _iterator5.return();
+                  }
+
+                case 22:
+                  _context2.prev = 22;
+
+                  if (!_didIteratorError5) {
+                    _context2.next = 25;
+                    break;
+                  }
+
+                  throw _iteratorError5;
+
+                case 25:
+                  return _context2.finish(22);
+
+                case 26:
+                  return _context2.finish(19);
+
+                case 27:
+                case "end":
+                  return _context2.stop();
+              }
+            }
+          }, value, this, [[3, 15, 19, 27], [20,, 22, 26]]);
+        })
+      }]);
+      return Company;
+    })();
+
+    var filter = _regenerator2.default.mark(function filter(items, predicate) {
+      var _iteratorNormalCompletion6, _didIteratorError6, _iteratorError6, _iterator6, _step6, item;
+
+      return _regenerator2.default.wrap(function filter$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _iteratorNormalCompletion6 = true;
+              _didIteratorError6 = false;
+              _iteratorError6 = undefined;
+              _context3.prev = 3;
+              _iterator6 = (0, _getIterator3.default)(items);
+
+            case 5:
+              if (_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done) {
+                _context3.next = 14;
+                break;
+              }
+
+              item = _step6.value;
+
+              console.log("filtering", item);
+
+              if (!predicate(item)) {
+                _context3.next = 11;
+                break;
+              }
+
+              _context3.next = 11;
+              return item;
+
+            case 11:
+              _iteratorNormalCompletion6 = true;
+              _context3.next = 5;
+              break;
+
+            case 14:
+              _context3.next = 20;
+              break;
+
+            case 16:
+              _context3.prev = 16;
+              _context3.t0 = _context3["catch"](3);
+              _didIteratorError6 = true;
+              _iteratorError6 = _context3.t0;
+
+            case 20:
+              _context3.prev = 20;
+              _context3.prev = 21;
+
+              if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                _iterator6.return();
+              }
+
+            case 23:
+              _context3.prev = 23;
+
+              if (!_didIteratorError6) {
+                _context3.next = 26;
+                break;
+              }
+
+              throw _iteratorError6;
+
+            case 26:
+              return _context3.finish(23);
+
+            case 27:
+              return _context3.finish(20);
+
+            case 28:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, filter, this, [[3, 16, 20, 28], [21,, 23, 27]]);
+    });
+
+    var take = _regenerator2.default.mark(function take(items, number) {
+      var count, _iteratorNormalCompletion7, _didIteratorError7, _iteratorError7, _iterator7, _step7, _item;
+
+      return _regenerator2.default.wrap(function take$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              count = 0;
+
+              if (!(number < 1)) {
+                _context4.next = 3;
+                break;
+              }
+
+              return _context4.abrupt("return");
+
+            case 3:
+              _iteratorNormalCompletion7 = true;
+              _didIteratorError7 = false;
+              _iteratorError7 = undefined;
+              _context4.prev = 6;
+              _iterator7 = (0, _getIterator3.default)(items);
+
+            case 8:
+              if (_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done) {
+                _context4.next = 19;
+                break;
+              }
+
+              _item = _step7.value;
+
+              console.log("taking", _item);
+              _context4.next = 13;
+              return _item;
+
+            case 13:
+              count++;
+
+              if (!(count >= number)) {
+                _context4.next = 16;
+                break;
+              }
+
+              return _context4.abrupt("return");
+
+            case 16:
+              _iteratorNormalCompletion7 = true;
+              _context4.next = 8;
+              break;
+
+            case 19:
+              _context4.next = 25;
+              break;
+
+            case 21:
+              _context4.prev = 21;
+              _context4.t0 = _context4["catch"](6);
+              _didIteratorError7 = true;
+              _iteratorError7 = _context4.t0;
+
+            case 25:
+              _context4.prev = 25;
+              _context4.prev = 26;
+
+              if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                _iterator7.return();
+              }
+
+            case 28:
+              _context4.prev = 28;
+
+              if (!_didIteratorError7) {
+                _context4.next = 31;
+                break;
+              }
+
+              throw _iteratorError7;
+
+            case 31:
+              return _context4.finish(28);
+
+            case 32:
+              return _context4.finish(25);
+
+            case 33:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, take, this, [[6, 21, 25, 33], [26,, 28, 32]]);
+    });
+
+    var count = 0;
+    var company = new Company();
+    company.addEmployees("Tim", "Sue", "Joy", "Tom");
+
+    var _iteratorNormalCompletion8 = true;
+    var _didIteratorError8 = false;
+    var _iteratorError8 = undefined;
+
+    try {
+      for (var _iterator8 = (0, _getIterator3.default)(take(filter(company, function (e) {
+        return e[0] === "T";
+      }), 1)), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+        var employee = _step8.value;
+
+        count += 1;
+      }
+    } catch (err) {
+      _didIteratorError8 = true;
+      _iteratorError8 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion8 && _iterator8.return) {
+          _iterator8.return();
+        }
+      } finally {
+        if (_didIteratorError8) {
+          throw _iteratorError8;
+        }
+      }
+    }
+
+    expect(count).toBe(1);
+  });
+});
+"use strict";
+
 describe("how let works", function () {
 
   it("will provide block scoping unline var", function () {
@@ -502,6 +1484,106 @@ describe("how let works", function () {
 
     var result = doWork();
     expect(result).toBe(10);
+  });
+});
+"use strict";
+
+var _isSafeInteger = require("babel-runtime/core-js/number/is-safe-integer");
+
+var _isSafeInteger2 = _interopRequireDefault(_isSafeInteger);
+
+var _minSafeInteger = require("babel-runtime/core-js/number/min-safe-integer");
+
+var _minSafeInteger2 = _interopRequireDefault(_minSafeInteger);
+
+var _maxSafeInteger = require("babel-runtime/core-js/number/max-safe-integer");
+
+var _maxSafeInteger2 = _interopRequireDefault(_maxSafeInteger);
+
+var _isInteger = require("babel-runtime/core-js/number/is-integer");
+
+var _isInteger2 = _interopRequireDefault(_isInteger);
+
+var _isNan = require("babel-runtime/core-js/number/is-nan");
+
+var _isNan2 = _interopRequireDefault(_isNan);
+
+var _isFinite = require("babel-runtime/core-js/number/is-finite");
+
+var _isFinite2 = _interopRequireDefault(_isFinite);
+
+var _parseFloat = require("babel-runtime/core-js/number/parse-float");
+
+var _parseFloat2 = _interopRequireDefault(_parseFloat);
+
+var _parseInt = require("babel-runtime/core-js/number/parse-int");
+
+var _parseInt2 = _interopRequireDefault(_parseInt);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+describe("Numbers", function () {
+  var a = 10;
+  var hexd = 0xa;
+
+  it("should support octal literals", function () {
+
+    // The old way.
+    // This doesn't transpile with Babel 6 - invalid number
+    //var octal = 071;
+
+    // New way
+    var octal = 57;
+    expect(octal).toBe(57);
+  });
+
+  it("should support binary literals", function () {
+    var bin = 13;
+    expect(bin).toBe(13);
+  });
+
+  it("should parse octal values with Number function", function () {
+    var octNum = Number("0o71");
+    expect(octNum).toBe(57);
+  });
+
+  it("should parse binary values with Number function", function () {
+    var octNum = Number("0b101");
+    expect(octNum).toBe(5);
+  });
+
+  it("should expose parseInt and parseFloat", function () {
+    expect((0, _parseInt2.default)("3")).toBe(3);
+    expect((0, _parseFloat2.default)("3.2")).toBe(3.2);
+  });
+
+  it("should not convert strings when calling Number.isFinite vs global", function () {
+    expect(isFinite("1")).toBe(true);
+    expect((0, _isFinite2.default)("1")).toBe(false);
+  });
+
+  it("should not convert strings when calling Number.isNaN vs global", function () {
+    expect(isNaN("NaN")).toBe(true);
+    expect((0, _isNan2.default)("NaN")).toBe(false);
+  });
+
+  it("should correctly detect integers with isInteger", function () {
+    expect((0, _isInteger2.default)(1)).toBe(true);
+    expect((0, _isInteger2.default)(1.0)).toBe(true);
+    expect((0, _isInteger2.default)(1.5)).toBe(false);
+  });
+
+  it("should expose max and min safe integer constants", function () {
+    expect(Math.pow(2, 53)).toBe(Math.pow(2, 53) + 1); // js weirdness
+    expect(Math.pow(2, 53) + 3).toBe(Math.pow(2, 53) + 5); // js weirdness
+
+    expect(_maxSafeInteger2.default).toBe(Math.pow(2, 53) - 1);
+    expect(_minSafeInteger2.default).toBe(Math.pow(2, 53) * -1 + 1);
+  });
+
+  it("should indicate safe integers with isSafeInteger", function () {
+    expect((0, _isSafeInteger2.default)(9007199254740991)).toBe(true); //Math.pow(2,53)
+    expect((0, _isSafeInteger2.default)(9007199254740992)).toBe(false); //Math.pow(2,53) + 1
   });
 });
 "use strict";
@@ -569,9 +1651,13 @@ describe("the spread", function () {
 });
 "use strict";
 
-var _templateObject = _taggedTemplateLiteral(["", " + ", " is ", ""], ["", " + ", " is ", ""]);
+var _templateObject = (0, _taggedTemplateLiteral3.default)(["", " + ", " is ", ""], ["", " + ", " is ", ""]);
 
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+var _taggedTemplateLiteral2 = require("babel-runtime/helpers/taggedTemplateLiteral");
+
+var _taggedTemplateLiteral3 = _interopRequireDefault(_taggedTemplateLiteral2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 describe("template literals", function () {
 
