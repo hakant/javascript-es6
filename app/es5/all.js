@@ -123,6 +123,205 @@ describe("arrow functions", function () {
     }, 15);
   });
 });
+'use strict';
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+describe("async generators", function () {
+
+  it('should be difficult to read with regular async code', function () {
+    console.log('start');
+    oldPause(500, function () {
+      console.log('middle');
+      oldPause(500, function () {
+        console.log('end');
+      });
+    });
+  });
+
+  it("should be easier to read with generators", function (done) {
+    var main = _regenerator2.default.mark(function main() {
+      return _regenerator2.default.wrap(function main$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              console.log("start");
+              _context.next = 3;
+              return pause(500);
+
+            case 3:
+              console.log("middle");
+              _context.next = 6;
+              return pause(500);
+
+            case 6:
+              console.log("end");
+
+              done();
+
+            case 8:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, main, this);
+    });
+
+    async.run(main);
+  });
+
+  it("should work with returned data", function (done) {
+    var main = _regenerator2.default.mark(function main() {
+      var price;
+      return _regenerator2.default.wrap(function main$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return getStockPrice();
+
+            case 2:
+              price = _context2.sent;
+
+              if (!(price > 45)) {
+                _context2.next = 8;
+                break;
+              }
+
+              _context2.next = 6;
+              return executeTrade();
+
+            case 6:
+              _context2.next = 9;
+              break;
+
+            case 8:
+              console.log("trade not made");
+
+            case 9:
+              done();
+
+            case 10:
+            case 'end':
+              return _context2.stop();
+          }
+        }
+      }, main, this);
+    });
+
+    async.run(main);
+  });
+
+  it("should work with errors", function (done) {
+    var main = _regenerator2.default.mark(function main() {
+      var price;
+      return _regenerator2.default.wrap(function main$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              _context3.next = 3;
+              return getStockPrice();
+
+            case 3:
+              price = _context3.sent;
+
+              if (!(price > 45)) {
+                _context3.next = 9;
+                break;
+              }
+
+              _context3.next = 7;
+              return executeTrade();
+
+            case 7:
+              _context3.next = 10;
+              break;
+
+            case 9:
+              console.log("trade not made");
+
+            case 10:
+              _context3.next = 15;
+              break;
+
+            case 12:
+              _context3.prev = 12;
+              _context3.t0 = _context3['catch'](0);
+
+              console.log("error! " + _context3.t0.message);
+
+            case 15:
+              done();
+
+            case 16:
+            case 'end':
+              return _context3.stop();
+          }
+        }
+      }, main, this, [[0, 12]]);
+    });
+
+    async.run(main);
+  });
+
+  it("should also work with promises", function (done) {
+    var main = _regenerator2.default.mark(function main() {
+      var price;
+      return _regenerator2.default.wrap(function main$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.prev = 0;
+              _context4.next = 3;
+              return getStockPriceP();
+
+            case 3:
+              price = _context4.sent;
+
+              if (!(price > 45)) {
+                _context4.next = 9;
+                break;
+              }
+
+              _context4.next = 7;
+              return executeTradeP();
+
+            case 7:
+              _context4.next = 10;
+              break;
+
+            case 9:
+              console.log("trade not made");
+
+            case 10:
+              _context4.next = 15;
+              break;
+
+            case 12:
+              _context4.prev = 12;
+              _context4.t0 = _context4['catch'](0);
+
+              console.log("error! " + _context4.t0.message);
+
+            case 15:
+              done();
+
+            case 16:
+            case 'end':
+              return _context4.stop();
+          }
+        }
+      }, main, this, [[0, 12]]);
+    });
+
+    asyncP.run(main);
+  });
+});
 "use strict";
 
 var _getPrototypeOf = require("babel-runtime/core-js/object/get-prototype-of");
@@ -881,6 +1080,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 describe("iterables", function () {
 
+  // TODO: Check why this doesn't pass in Chrome
   it("can work with iterators at a low level", function () {
 
     var sum = 0;
@@ -1488,6 +1688,165 @@ describe("how let works", function () {
 });
 "use strict";
 
+var _slicedToArray2 = require("babel-runtime/helpers/slicedToArray");
+
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+
+var _getIterator2 = require("babel-runtime/core-js/get-iterator");
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _map = require("babel-runtime/core-js/map");
+
+var _map2 = _interopRequireDefault(_map);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+describe("Maps", function () {
+
+  it("should contain zero items when constructed", function () {
+    var map = new _map2.default();
+    expect(map.size).toBe(0);
+  });
+
+  it("should contain 1 item when one item is added", function () {
+    var map = new _map2.default();
+    map.set("age", 35);
+    expect(map.size).toBe(1);
+  });
+
+  it("should return the value when get is called with the correct key", function () {
+    var map = new _map2.default();
+    map.set("age", 35);
+    expect(map.get("age")).toBe(35);
+  });
+
+  it('should allow an object to be the key', function () {
+    var ageMap = new _map2.default();
+    var ralph = { 'name': 'Ralph' };
+    ageMap.set(ralph, 29);
+
+    expect(ageMap.get(ralph)).toBe(29);
+  });
+
+  it("should contain items when given an array in the constructor", function () {
+    var map = new _map2.default([['name', 'John'], ['age', 15], ['weight', '155']]);
+    expect(map.size).toBe(3);
+  });
+
+  it("should find the correct item when has is called", function () {
+    var map = new _map2.default([['name', 'John'], ['age', 15], ['weight', '155']]);
+    expect(map.has('age')).toBe(true);
+  });
+
+  it("should not allow duplicate keys", function () {
+    var map = new _map2.default();
+    var key = {};
+    map.set(key, 'first');
+    map.set(key, 'second');
+    expect(map.get(key)).toBe('second');
+  });
+
+  it("should have no items after clear is called", function () {
+    var map = new _map2.default();
+    map.set(1, 'a');
+    map.set(2, 'b');
+    map.set(3, 'c');
+    map.clear();
+    expect(map.size).toBe(0);
+  });
+
+  it("should remove an item when delete is called", function () {
+    var map = new _map2.default();
+    var key1 = {};
+    var key2 = {};
+    map.set(key1, 100);
+    map.set(key2, 200);
+    map.delete(key2);
+    expect(map.has(key2)).toBe(false);
+  });
+
+  it("should call the callback function for each item when forEach is called", function () {
+    var map = new _map2.default([['name', 'John'], ['age', 15], ['weight', '155']]);
+    var iterationCount = 0;
+    map.forEach(function (value, key) {
+      iterationCount++;
+      // use value & key
+    });
+    expect(iterationCount).toBe(3);
+  });
+
+  it("should support for of iteration", function () {
+    var map = new _map2.default([['name', 'John'], ['age', 15], ['weight', '155']]);
+    var iterationCount = 0;
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = (0, _getIterator3.default)(map), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var _step$value = (0, _slicedToArray3.default)(_step.value, 2);
+
+        var key = _step$value[0];
+        var value = _step$value[1];
+
+        // item is an array like ['name', 'John']
+        iterationCount++;
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+
+    expect(iterationCount).toBe(3);
+  });
+
+  it("should return an iterator of arrays of key value pairs when entries is called", function () {
+    var map = new _map2.default();
+    map.set('name', 'Joe');
+    var items = map.entries();
+    var first = items.next().value;
+    expect(first[0]).toBe('name');
+    expect(first[1]).toBe('Joe');
+  });
+
+  it("should return an iterator of values when values is called", function () {
+    var map = new _map2.default();
+    map.set(1, 'a');
+    var values = map.values();
+    var first = values.next().value;
+    expect(first).toBe('a');
+  });
+
+  it("should return an iterator of keys when keys is called", function () {
+    var map = new _map2.default();
+    map.set(1, 'a');
+    var keys = map.keys();
+    var firstKey = keys.next().value;
+    expect(firstKey).toBe(1);
+  });
+
+  it("should be able to be constructed with an iterator", function () {
+    var map = new _map2.default();
+    map.set('1');
+    map.set('2');
+    map.set('3');
+    var map2 = new _map2.default(map.entries());
+    expect(map2.size).toBe(3);
+  });
+});
+"use strict";
+
 var _isSafeInteger = require("babel-runtime/core-js/number/is-safe-integer");
 
 var _isSafeInteger2 = _interopRequireDefault(_isSafeInteger);
@@ -1628,6 +1987,151 @@ describe("rest parameters", function () {
 });
 "use strict";
 
+var _getIterator2 = require("babel-runtime/core-js/get-iterator");
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _set = require("babel-runtime/core-js/set");
+
+var _set2 = _interopRequireDefault(_set);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// Sets represent a unique set of objects
+
+describe("Sets", function () {
+
+  it("should contain zero items when constructed", function () {
+    var set = new _set2.default();
+    expect(set.size).toBe(0);
+  });
+
+  it("should contain 1 item when one item is added", function () {
+    var set = new _set2.default();
+    set.add("somevalue");
+    expect(set.size).toBe(1);
+  });
+
+  it("should allow objects as a key", function () {
+    var set = new _set2.default();
+    var key = {};
+    set.add(key);
+    expect(set.has(key)).toBe(true);
+  });
+
+  it("should contain items when given an array in the constr.", function () {
+    var set = new _set2.default([1, 2, 3]);
+    expect(set.has(1)).toBe(true);
+  });
+
+  it("should not allow duplicate values", function () {
+    var set = new _set2.default();
+    var key = {};
+    set.add(key);
+    set.add(key);
+    expect(set.size).toBe(1);
+  });
+
+  it("should have no items after clear is called", function () {
+    var set = new _set2.default();
+    set.add(1);
+    set.add(2);
+    set.add(3);
+    set.clear();
+    expect(set.size).toBe(0);
+  });
+
+  it("should remove an item when delete is called", function () {
+    var set = new _set2.default();
+    set.add(1);
+    set.add(2);
+    set.delete(1);
+    expect(set.size).toBe(1);
+  });
+
+  it("should call a callback function once for each item when foreach is invoked", function () {
+    var set = new _set2.default();
+    set.add("Tom");
+    set.add("Dick");
+    set.add("Harry");
+
+    var iterationCount = 0;
+    set.forEach(function (item) {
+      return iterationCount++;
+    });
+    expect(iterationCount).toBe(3);
+  });
+
+  it("should support for of iteration", function () {
+    var set = new _set2.default();
+    set.add("Tom");
+    set.add("Dick");
+    set.add("Harry");
+
+    var iterationCount = 0;
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = (0, _getIterator3.default)(set), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var item = _step.value;
+
+        iterationCount++;
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+
+    expect(iterationCount).toBe(3);
+  });
+
+  it("should return an iterator of arrays when entries is called", function () {
+    var set = new _set2.default();
+    set.add(1);
+
+    var entries = set.entries();
+    var firstEntry = entries.next().value;
+
+    expect(firstEntry[0]).toBe(1);
+    expect(firstEntry[1]).toBe(1);
+  });
+
+  it("should return an iterator of values when values is called", function () {
+    var set = new _set2.default();
+    set.add(1);
+
+    var entries = set.values();
+    var firstEntry = entries.next().value;
+
+    expect(firstEntry).toBe(1);
+  });
+
+  it("should be able to be constructed with an iterator", function () {
+    var set = new _set2.default();
+    set.add(1);
+    set.add(2);
+    set.add(3);
+
+    var set2 = new _set2.default(set.values());
+    expect(set2.size).toBe(3);
+    expect(set).toEqual(set2); // they're equal
+    expect(set).not.toBe(set2); // but they're not the same
+  });
+});
+"use strict";
+
 describe("the spread", function () {
 
   it("can spread an array across parameters", function () {
@@ -1650,14 +2154,6 @@ describe("the spread", function () {
   });
 });
 "use strict";
-
-var _templateObject = (0, _taggedTemplateLiteral3.default)(["", " + ", " is ", ""], ["", " + ", " is ", ""]);
-
-var _taggedTemplateLiteral2 = require("babel-runtime/helpers/taggedTemplateLiteral");
-
-var _taggedTemplateLiteral3 = _interopRequireDefault(_taggedTemplateLiteral2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 describe("template literals", function () {
 
@@ -1682,32 +2178,122 @@ describe("template literals", function () {
     expect(url).toBe("http://apiserver/music/2112");
   });
 
-  it("can use tags", function () {
+  // // TODO: Look into this - transpilation gets broken
+  // it("can use tags", function(){
+  //
+  //   let upper = function(strings, ...values){
+  //
+  //     // for some reason if values is not referred here like below
+  //     // transpilation doesn't work
+  //     console.log(values);
+  //
+  //     let result = "";
+  //     for (var i = 0; i < strings.length; i++) {
+  //       result += strings[i];
+  //       if (i < values.length) {
+  //         result += values[i];
+  //       }
+  //     }
+  //     return result.toUpperCase();
+  //   };
+  //
+  //   var x = 1;
+  //   var y = 3;
+  //   var result = upper `${x} + ${y} is ${x+y}`;
+  //
+  //   expect(result).toBe("1 + 3 IS 4");
+  //
+  // });
+});
+'use strict';
 
-    var upper = function upper(strings) {
-      for (var _len = arguments.length, values = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        values[_key - 1] = arguments[_key];
-      }
+var _weakMap = require('babel-runtime/core-js/weak-map');
 
-      // for some reason if values is not referred here like below
-      // transpilation doesn't work
-      console.log(values);
+var _weakMap2 = _interopRequireDefault(_weakMap);
 
-      var result = "";
-      for (var i = 0; i < strings.length; i++) {
-        result += strings[i];
-        if (i < values.length) {
-          result += values[i];
-        }
-      }
-      return result.toUpperCase();
-    };
+var _weakSet = require('babel-runtime/core-js/weak-set');
 
-    var x = 1;
-    var y = 3;
-    var result = upper(_templateObject, x, y, x + y);
+var _weakSet2 = _interopRequireDefault(_weakSet);
 
-    expect(result).toBe("1 + 3 IS 4");
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+describe('WeakSets', function () {
+  it('should not have properties & methods that relate to the entire set', function () {
+    var set = new _weakSet2.default();
+    expect(set.size).toBe(undefined);
+    expect(set.entries).toBe(undefined);
+    expect(set.values).toBe(undefined);
+    expect(set.forEach).toBe(undefined);
   });
+
+  it('should be able to find items with has', function () {
+    var set = new _weakSet2.default();
+    var item = { name: 'Joe' };
+    set.add(item);
+    expect(set.has(item)).toBe(true);
+  });
+
+  it('should be able to remove items with delete', function () {
+    var set = new _weakSet2.default();
+    var item = { name: 'Joe' };
+    set.add(item);
+    set.delete(item);
+    expect(set.has(item)).toBe(false);
+  });
+
+  // TODO: Do weaksets have clear method?
+  // it('should remove all items when clear is called', function() {
+  //   var set = new WeakSet();
+  //   var item = {name:'Joe'};
+  //   set.add(item);
+  //   set.clear();
+  //   expect(set.has(item)).toBe(false);
+  // });
+});
+
+describe('WeakMaps', function () {
+  it('should not have properties & methods that relate to the entire set', function () {
+    var map = new _weakMap2.default();
+
+    expect(map.size).toBe(undefined);
+    expect(map.entries).toBe(undefined);
+    expect(map.keys).toBe(undefined);
+    expect(map.values).toBe(undefined);
+    expect(map.forEach).toBe(undefined);
+  });
+
+  it('should be able to determine existince of items with has', function () {
+    var map = new _weakMap2.default();
+    var key = {};
+    map.set(key, 'a');
+    expect(map.has(key)).toBe(true);
+  });
+
+  it('should be able to get the correct value', function () {
+    var map = new _weakMap2.default();
+    var key = {};
+    map.set(key, 'a');
+    expect(map.get(key)).toBe('a');
+  });
+
+  it('should be able to remove items with delete', function () {
+    var map = new _weakMap2.default();
+    var key = {};
+    map.set(key, 'a');
+    map.delete(key);
+    expect(map.has(key)).toBe(false);
+  });
+
+  // Do weakmaps have clear method?
+  // it('should remove all items when clear is called', function() {
+  //   var map = new WeakMap();
+  //   var key = {};
+  //   map.set(key, 'a');
+  //   var key2 = {};
+  //   map.set(key2, 'b');
+  //   map.clear();
+  //   expect(map.has(key)).toBe(false);
+  //   expect(map.has(key2)).toBe(false);
+  // });
 });
 //# sourceMappingURL=all.js.map

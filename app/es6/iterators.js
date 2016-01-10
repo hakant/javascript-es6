@@ -1,5 +1,6 @@
 describe("iterables", function() {
 
+  // TODO: Check why this doesn't pass in Chrome
   it("can work with iterators at a low level", function() {
 
     let sum = 0;
