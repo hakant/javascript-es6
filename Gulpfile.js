@@ -7,6 +7,8 @@ var babel = require("gulp-babel");
 var concat = require("gulp-concat");
 var browserify = require("browserify");
 var source = require("vinyl-source-stream");
+var es = require('event-stream');
+var rename = require('gulp-rename');
 
 var WEB_PORT = 9000;
 var lrs = lrserver();
@@ -33,29 +35,57 @@ gulp.task('babel', function() {
       presets: ['es2015'],
       plugins: ['transform-runtime']
     }))
-    .pipe(concat("all.js"))
+    .pipe(concat("jasmine.tests.js"))
     .pipe(sourcemaps.write("."))
     .pipe(gulp.dest('app/es5'));
 
 });
 
+gulp.task('babel-modules', function() {
+  return gulp.src('app/es6-modules/**/*.js')
+    .pipe(sourcemaps.init())
+    .pipe(babel({
+      presets: ['es2015'],
+      plugins: ['transform-runtime']
+    }))
+    .pipe(sourcemaps.write("."))
+    .pipe(gulp.dest('app/es5'));
+});
+
 gulp.task('browserify', function() {
-    return browserify('app/es5/all.js')
-        .bundle()
-        //Pass desired output filename to vinyl-source-stream
-        .pipe(source('all-browserified.js'))
-        // Start piping stream to tasks!
-        .pipe(gulp.dest('app/es5/'));
+  var files = [
+        'app/es5/jasmine.tests.js',
+        'app/es5/employee.js',
+        'app/es5/company.js',
+        'app/es5/factory.js',
+        'app/es5/main.js'
+    ];
+    // map them to our stream function
+    var tasks = files.map(function(entry) {
+        return browserify({ entries: [entry] })
+            .bundle()
+            .pipe(source(entry))
+            // rename them to have "bundle as postfix"
+            .pipe(rename({
+                dirname: '',
+                extname: '.browser.js'
+            }))
+            .pipe(gulp.dest('app/es5/'));
+        });
+    // create a merged stream
+    return es.merge.apply(null, tasks);
 });
 
 gulp.task('server', function() {
   gulp.run('babel');
+  gulp.run('babel-modules');
   gulp.run('browserify');
   gulp.run('lr-server');
 
-  var babelFiles = ['app/es6/**/*.js'];
+  var babelFiles = ['app/es6/**/*.js', 'app/es6-modules/**/*.js'];
   gulp.watch(babelFiles, function() {
     gulp.run('babel');
+    gulp.run('babel-modules');
     gulp.run('browserify');
   });
 
